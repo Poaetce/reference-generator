@@ -59,7 +59,7 @@ class Function:
     def table_item(self) -> str:
         main: str = "|`*{identifier}*`\n|{description}".format(
             identifier = self.identifier,
-            description = self.description if self.description else '',
+            description = self.description or '',
         )
         
         if self.return_type:
