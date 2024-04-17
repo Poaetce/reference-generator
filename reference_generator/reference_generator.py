@@ -33,6 +33,8 @@ class Function:
         self.description: str = ast.get_docstring(function).splitlines()[0] if self.docstring else None
 
     def docstring_template(self) -> str:
+        main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
+
         if self.parameters:
             parameter_list: str = "=== parameters"
             for index in range(len(self.parameters)):
@@ -42,29 +44,27 @@ class Function:
                     optional = '(optional)' if self.parameter_optional[index] else '',
                 )
                 parameter_list += item
-        else:
-            parameter_list: str = None
+            
+            main += '\n\n' + parameter_list
         
         if self.return_type:
             returns: str = "=== returns\n_{return_type}_- <RETURN DESCRIPTION>".format(
                 return_type = self.return_type,
             )
-        else:
-            returns: str = None
 
-        return "<DESCRIPTION>\n\n<EXPLANATION>{parameter_list}{returns}".format(
-            parameter_list = '\n\n' + parameter_list if parameter_list else '',
-            returns = '\n\n' + returns if returns else '',
-        )
+            main += '\n\n' + returns
+
+        return main
 
     def table_item(self) -> str:
         main: str = "|`*{identifier}*`\n|{description}".format(
             identifier = self.identifier,
             description = self.description if self.description else '',
         )
+        
         if self.return_type:
-            return "|`_{return_type}_`\n".format(
+            main = "|`_{return_type}_`\n".format(
                 return_type = self.return_type,
             ) + main
-        else:
-            return main
+        
+        return main
