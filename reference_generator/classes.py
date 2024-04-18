@@ -29,8 +29,9 @@ class Function:
 
         self.return_type: str = get_type(function.returns)
 
-        self.docstring: str = ast.get_docstring(function)
-        self.description: str = ast.get_docstring(function).splitlines()[0] if self.docstring else None
+        docstring: str = ast.get_docstring(function) or None
+        self.docstring: str = docstring.strip() if docstring else None
+        self.description: str = docstring.strip().splitlines()[0] if docstring else None
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
