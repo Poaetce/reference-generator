@@ -2,6 +2,7 @@ import unittest
 import ast
 from reference_generator.classes import Function
 
+
 def open_read_parse(file: str) -> ast.FunctionDef:
     with open(file, 'r') as opened:
         return ast.parse(opened.read()).body[0]
