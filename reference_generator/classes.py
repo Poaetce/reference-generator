@@ -89,8 +89,8 @@ class TopLevelFunction(_Function):
 
 
 class Method(_Function):
-    def __init__(self, function_definition: ast.FunctionDef, class_reference: str) -> None:
-        _Function.__init__(self, function_definition, class_reference)
+    def __init__(self, function_node: ast.FunctionDef, class_reference: str) -> None:
+        _Function.__init__(self, function_node, class_reference)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
@@ -115,3 +115,15 @@ class Method(_Function):
             main += '\n\n' + returns
 
         return main
+    
+
+class Class(_Basic):
+    def __init__(self, class_node: ast.ClassDef, import_path: str) -> None:
+        _Basic.__init__(self, class_node, import_path)
+        
+        self.methods: list[Method] = []
+        for node in ast.iter_child_nodes(class_node):
+            if type(node) == ast.FunctionDef:
+                self.methods.append(Method(node))
+        
+        
