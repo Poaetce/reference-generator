@@ -24,6 +24,19 @@ class Function:
 
         self.return_type: str = get_type(function_definition.returns)
 
+    def table_item(self) -> str:
+        main: str = "|`*{identifier}*`\n|{description}".format(
+            identifier = self.identifier,
+            description = self.description or '',
+        )
+        
+        if self.return_type:
+            main = "|`_{return_type}_`\n".format(
+                return_type = self.return_type,
+            ) + main
+        
+        return main
+
 
 class TopLevelFunction(Function):
     def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
@@ -59,19 +72,6 @@ class TopLevelFunction(Function):
 
             main += '\n\n' + returns
 
-        return main
-
-    def table_item(self) -> str:
-        main: str = "|`*{identifier}*`\n|{description}".format(
-            identifier = self.identifier,
-            description = self.description or '',
-        )
-        
-        if self.return_type:
-            main = "|`_{return_type}_`\n".format(
-                return_type = self.return_type,
-            ) + main
-        
         return main
     
     def shape(self) -> str:
