@@ -91,6 +91,11 @@ class TopLevelFunction(_Function):
 class Method(_Function):
     def __init__(self, function_node: ast.FunctionDef, class_reference: str) -> None:
         _Function.__init__(self, function_node, class_reference)
+        
+        self.parameters.pop(0)
+        self.parameter_types.pop(0)
+        self.parameter_optional.pop(0)
+
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
@@ -124,8 +129,33 @@ class Class(_Basic):
         self.methods: list[Method] = []
         for node in ast.iter_child_nodes(class_node):
             if type(node) == ast.FunctionDef:
-                self.methods.append(Method(node))
+                self.methods.append(Method(node, self.identifier))
+
+    def docstring_template(self) -> str:
+        return "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== attributes\n* _<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>"
 
     def shape(self) -> str:
         return f"`{self.reference}.*{self.identifier}*"
+    
+    def details(self) -> str:
+        main: str = f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
+
+        if self.methods:
+            non_typed_table: str = ""
+            typed_table: str = ""
+
+            for method in self.methods:
+                if method.return_type:
+                    typed_table += method.table_item() + '\n\n'
+                else:
+                    non_typed_table += method.table_item() + '\n\n'
+
+            main += ("[cols='1,5']\n\n" + non_typed_table) if non_typed_table else ""
+            main += ("[cols='1,5']\n\n" + typed_table) if typed_table else ""
+
+            main += '\n\n'.join(method.details() for method in self.methods)
+        
+        return main
+
+
     
