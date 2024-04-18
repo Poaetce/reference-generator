@@ -13,20 +13,20 @@ def get_type(expression: ast.expr) -> str:
             value: str = get_type(expression.value)
             slice: str = get_type(expression.slice)
             return f'{value}[{slice}]'
-
+        
 
 class Function:
-    def __init__(self, function: ast.FunctionDef, import_path: str) -> None:
-        self.identifier: str = function.name
+    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
+        self.identifier: str = function_definition.name
 
-        arguments: ast.arguments = function.args
+        arguments: ast.arguments = function_definition.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
         self.parameter_types: list[str] = [get_type(argument.annotation) for argument in arguments.args]
         self.parameter_optional: list[bool] = [False] * (len(arguments.args) - len(arguments.defaults)) + [True] * len(arguments.defaults)
 
-        self.return_type: str = get_type(function.returns)
+        self.return_type: str = get_type(function_definition.returns)
 
-        docstring: str = ast.get_docstring(function) or None
+        docstring: str = ast.get_docstring(function_definition) or None
         self.docstring: str = docstring.strip() if docstring else None
         self.description: str = docstring.strip().splitlines()[0] if docstring else None
 
