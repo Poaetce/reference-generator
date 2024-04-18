@@ -54,6 +54,9 @@ class _Function(_Basic):
         parameters: str = '_' + '_, _'.join(self.parameters) + '_' if self.parameters else ''
 
         return f"`{self.reference}.*{self.identifier}*({parameters})`"
+    
+    def details(self) -> str:
+        return f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
 
 
 class TopLevelFunction(_Function):
@@ -83,6 +86,3 @@ class TopLevelFunction(_Function):
             main += '\n\n' + returns
 
         return main
-    
-    def details(self) -> str:
-        return f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
