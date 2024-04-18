@@ -22,7 +22,7 @@ class Function:
     def __init__(self, function: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function.name
 
-        arguments = function.args
+        arguments: ast.arguments = function.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
         self.parameter_types: list[str] = [get_type(argument.annotation) for argument in arguments.args]
         self.parameter_optional: list[bool] = [False] * (len(arguments.args) - len(arguments.defaults)) + [True] * len(arguments.defaults)
