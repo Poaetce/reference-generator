@@ -16,10 +16,10 @@ def get_type(expression: ast.expr) -> str:
         
 
 class _Basic:
-    def __init__(self, definition: ast.stmt, reference: str) -> None:
-        self.identifier: str = definition.name
+    def __init__(self, node: ast.stmt, reference: str) -> None:
+        self.identifier: str = node.name
 
-        docstring: str = ast.get_docstring(definition) or None
+        docstring: str = ast.get_docstring(node) or None
         self.docstring: str = docstring.strip() if docstring else None
         self.description: str = docstring.strip().splitlines()[0] if docstring else None
 
@@ -27,15 +27,15 @@ class _Basic:
         
 
 class _Function(_Basic):
-    def __init__(self, function_definition: ast.FunctionDef, reference: str) -> None:
-        _Basic.__init__(self, function_definition, reference)
+    def __init__(self, function_node: ast.FunctionDef, reference: str) -> None:
+        _Basic.__init__(self, function_node, reference)
 
-        arguments: ast.arguments = function_definition.args
+        arguments: ast.arguments = function_node.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
         self.parameter_types: list[str] = [get_type(argument.annotation) for argument in arguments.args]
         self.parameter_optional: list[bool] = [False] * (len(arguments.args) - len(arguments.defaults)) + [True] * len(arguments.defaults)
 
-        self.return_type: str = get_type(function_definition.returns)
+        self.return_type: str = get_type(function_node.returns)
 
     def table_item(self) -> str:
         main: str = "|`*{identifier}*`\n|{description}".format(
@@ -60,8 +60,8 @@ class _Function(_Basic):
 
 
 class TopLevelFunction(_Function):
-    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
-        _Function.__init__(self, function_definition, import_path)
+    def __init__(self, function_node: ast.FunctionDef, import_path: str) -> None:
+        _Function.__init__(self, function_node, import_path)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
