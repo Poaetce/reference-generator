@@ -15,6 +15,18 @@ def get_type(expression: ast.expr) -> str:
             return f'{value}[{slice}]'
         
 
+class Basic:
+    def __init__(self, definition: ast.stmt, reference: str) -> None:
+        self.identifier: str = definition.name
+
+        docstring: str = ast.get_docstring(definition) or None
+        self.docstring: str = docstring.strip() if docstring else None
+        self.description: str = docstring.strip().splitlines()[0] if docstring else None
+
+        self.reference: str = reference
+        
+
+
 class Function:
     def __init__(self, function_definition: ast.FunctionDef) -> None:
         arguments: ast.arguments = function_definition.args
@@ -38,17 +50,12 @@ class Function:
         return main
 
 
-class TopLevelFunction(Function):
-    def __init__(self, function_definition: ast.FunctionDef, reference: str) -> None:
+class TopLevelFunction(Function, Basic):
+    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function_definition.name
 
         Function.__init__(self, function_definition)
-
-        docstring: str = ast.get_docstring(function_definition) or None
-        self.docstring: str = docstring.strip() if docstring else None
-        self.description: str = docstring.strip().splitlines()[0] if docstring else None
-
-        self.reference: str = reference
+        Basic.__init__(self, function_definition, import_path)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
