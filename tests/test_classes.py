@@ -52,6 +52,27 @@ class TestFunction(unittest.TestCase):
         expected_multiple_parameter_function_shape: str = "`functions.*hello*(_name_, _shout_)`"
         self.assertEqual(multiple_parameter_function.shape(), expected_multiple_parameter_function_shape)
 
+    def test_details(self):
+        base_function: Function = Function(open_read_parse('tests/test_files/functions/base_function.py'), 'functions')
+        expected_base_function_details: str = f"== `hello`\n\n{base_function.shape()}\n\n{base_function.docstring}"
+        self.assertEqual(base_function.details(), expected_base_function_details)
+
+        return_function: Function = Function(open_read_parse('tests/test_files/functions/return_function.py'), 'functions')
+        expected_return_function_details: str = f"== `hello`\n\n{return_function.shape()}\n\n{return_function.docstring}"
+        self.assertEqual(return_function.details(), expected_return_function_details)
+
+        parameter_function: Function = Function(open_read_parse('tests/test_files/functions/parameter_function.py'), 'functions')
+        expected_parameter_function_details: str = f"== `hello`\n\n{parameter_function.shape()}\n\n{parameter_function.docstring}"
+        self.assertEqual(parameter_function.details(), expected_parameter_function_details)
+
+        multiple_parameter_function: Function = Function(open_read_parse('tests/test_files/functions/multiple_parameter_function.py'), 'functions')
+        expected_multiple_parameter_function_details: str = f"== `hello`\n\n{multiple_parameter_function.shape()}\n\n{multiple_parameter_function.docstring}"
+        self.assertEqual(multiple_parameter_function.details(), expected_multiple_parameter_function_details)
+
+        full_function: Function = Function(open_read_parse('tests/test_files/functions/full_function.py'), 'functions')
+        expected_full_function_details: str = f"== `hello`\n\n{full_function.shape()}\n\n{full_function.docstring}"
+        self.assertEqual(full_function.details(), expected_full_function_details)
+
 
 if __name__ == '__main__':
     unittest.main()

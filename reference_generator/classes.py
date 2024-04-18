@@ -76,3 +76,6 @@ class Function:
         parameters: str = '_' + '_, _'.join(self.parameters) + '_' if self.parameters else ''
 
         return f"`{self.import_path}.*{self.identifier}*({parameters})`"
+    
+    def details(self) -> str:
+        return f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
