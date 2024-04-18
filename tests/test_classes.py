@@ -15,7 +15,7 @@ class TestFunction(unittest.TestCase):
         self.assertEqual(base_function.docstring_template(), expected_base_function_docstring)
 
         return_function: Function = Function(open_read_parse('tests/test_files/functions/return_function.py'), 'functions')
-        expected_return_function_docstring: str = "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== returns\n_str_- <RETURN DESCRIPTION>"
+        expected_return_function_docstring: str = "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== returns\n_str_ - <RETURN DESCRIPTION>"
         self.assertEqual(return_function.docstring_template(), expected_return_function_docstring)
 
         parameter_function: Function = Function(open_read_parse('tests/test_files/functions/parameter_function.py'), 'functions')
@@ -27,7 +27,7 @@ class TestFunction(unittest.TestCase):
         self.assertEqual(multiple_parameter_function.docstring_template(), expected_multiple_parameter_function_docstring)
 
         full_function: Function = Function(open_read_parse('tests/test_files/functions/full_function.py'), 'functions')
-        expected_full_function_docstring: str = "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== parameters\n* _str_ *name*  - <PARAMETER DESCRIPTION>\n\n=== returns\n_str_- <RETURN DESCRIPTION>"
+        expected_full_function_docstring: str = "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== parameters\n* _str_ *name*  - <PARAMETER DESCRIPTION>\n\n=== returns\n_str_ - <RETURN DESCRIPTION>"
         self.assertEqual(full_function.docstring_template(), expected_full_function_docstring)
 
     def test_table_item(self):

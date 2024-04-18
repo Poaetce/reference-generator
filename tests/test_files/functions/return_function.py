@@ -5,7 +5,7 @@ def hello() -> str:
     returns "hello"
 
     === returns
-    _str_- a greeting
+    _str_ - a greeting
     '''
     
     return "hello"

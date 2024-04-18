@@ -51,7 +51,7 @@ class Function:
             main += '\n\n' + parameter_list
         
         if self.return_type:
-            returns: str = "=== returns\n_{return_type}_- <RETURN DESCRIPTION>".format(
+            returns: str = "=== returns\n_{return_type}_ - <RETURN DESCRIPTION>".format(
                 return_type = self.return_type,
             )
 

@@ -8,7 +8,7 @@ def hello(name: str) -> str:
     * _str_ *name*  - name of the person to greet
 
     === returns
-    _str_- a greeting
+    _str_ - a greeting
     '''
 
     return f"hello, {name}"
