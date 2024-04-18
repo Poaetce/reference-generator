@@ -26,8 +26,10 @@ class _Basic:
         self.reference: str = reference
         
 
-class _Function:
-    def __init__(self, function_definition: ast.FunctionDef) -> None:
+class _Function(_Basic):
+    def __init__(self, function_definition: ast.FunctionDef, reference: str) -> None:
+        _Basic.__init__(self, function_definition, reference)
+
         arguments: ast.arguments = function_definition.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
         self.parameter_types: list[str] = [get_type(argument.annotation) for argument in arguments.args]
@@ -49,12 +51,9 @@ class _Function:
         return main
 
 
-class TopLevelFunction(_Function, _Basic):
+class TopLevelFunction(_Function):
     def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
-        self.identifier: str = function_definition.name
-
-        _Function.__init__(self, function_definition)
-        _Basic.__init__(self, function_definition, import_path)
+        _Function.__init__(self, function_definition, import_path)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
