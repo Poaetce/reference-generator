@@ -15,7 +15,7 @@ def get_type(expression: ast.expr) -> str:
             return f'{value}[{slice}]'
         
 
-class Basic:
+class _Basic:
     def __init__(self, definition: ast.stmt, reference: str) -> None:
         self.identifier: str = definition.name
 
@@ -26,8 +26,7 @@ class Basic:
         self.reference: str = reference
         
 
-
-class Function:
+class _Function:
     def __init__(self, function_definition: ast.FunctionDef) -> None:
         arguments: ast.arguments = function_definition.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
@@ -50,7 +49,7 @@ class Function:
         return main
 
 
-class TopLevelFunction(Function, Basic):
+class TopLevelFunction(_Function, _Basic):
     def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function_definition.name
 
