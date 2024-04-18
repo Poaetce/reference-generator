@@ -53,8 +53,8 @@ class TopLevelFunction(_Function, _Basic):
     def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function_definition.name
 
-        Function.__init__(self, function_definition)
-        Basic.__init__(self, function_definition, import_path)
+        _Function.__init__(self, function_definition)
+        _Basic.__init__(self, function_definition, import_path)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
