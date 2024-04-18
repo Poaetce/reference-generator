@@ -39,6 +39,19 @@ class TestFunction(unittest.TestCase):
         expected_return_function_item: str = "|`_str_`\n|`*hello*`\n|greets the user"
         self.assertEqual(return_function.table_item(), expected_return_function_item)
 
+    def test_shape(self):
+        base_function: Function = Function(open_read_parse('tests/test_files/functions/base_function.py'), 'functions')
+        expected_base_function_shape: str = "`functions.*hello*()`"
+        self.assertEqual(base_function.shape(), expected_base_function_shape)
+
+        parameter_function: Function = Function(open_read_parse('tests/test_files/functions/parameter_function.py'), 'functions')
+        expected_parameter_function_shape: str = "`functions.*hello*(_name_)`"
+        self.assertEqual(parameter_function.shape(), expected_parameter_function_shape)
+
+        multiple_parameter_function: Function = Function(open_read_parse('tests/test_files/functions/multiple_parameter_function.py'), 'functions')
+        expected_multiple_parameter_function_shape: str = "`functions.*hello*(_name_, _shout_)`"
+        self.assertEqual(multiple_parameter_function.shape(), expected_multiple_parameter_function_shape)
+
 
 if __name__ == '__main__':
     unittest.main()
