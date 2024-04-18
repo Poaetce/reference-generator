@@ -123,7 +123,7 @@ class MethodReferencer(_BaseFunctionReferencer):
     
 
 class ClassReferencer(_BaseReferencer):
-    def __init__(self, class_node: ast.ClassReferencerDef, import_path: str) -> None:
+    def __init__(self, class_node: ast.ClassDef, import_path: str) -> None:
         _BaseReferencer.__init__(self, class_node, import_path)
         
         self.methods: list[MethodReferencer] = []
