@@ -32,11 +32,11 @@ class TestFunction(unittest.TestCase):
 
     def test_table_item(self):
         base_function: Function = Function(open_read_parse('tests/test_files/functions/base_function.py'))
-        expected_base_function_item: str = "|`*hello*`\n|"
+        expected_base_function_item: str = "|`*hello*`\n|greets the user"
         self.assertEqual(base_function.table_item(), expected_base_function_item)
 
         return_function: Function = Function(open_read_parse('tests/test_files/functions/return_function.py'))
-        expected_return_function_item: str = "|`_str_`\n|`*hello*`\n|"
+        expected_return_function_item: str = "|`_str_`\n|`*hello*`\n|greets the user"
         self.assertEqual(return_function.table_item(), expected_return_function_item)
 
 
