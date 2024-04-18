@@ -125,5 +125,7 @@ class Class(_Basic):
         for node in ast.iter_child_nodes(class_node):
             if type(node) == ast.FunctionDef:
                 self.methods.append(Method(node))
-        
-        
+
+    def shape(self) -> str:
+        return f"`{self.reference}.*{self.identifier}*"
+    
