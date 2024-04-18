@@ -12,10 +12,7 @@ def get_type(expression: ast.expr) -> str:
         case ast.Subscript:
             value: str = get_type(expression.value)
             slice: str = get_type(expression.slice)
-            return '{value}[{slice}]'.format(
-                value = value,
-                slice = slice,
-            )
+            return f'{value}[{slice}]'
 
 
 class Function:
