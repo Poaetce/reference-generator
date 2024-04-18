@@ -19,7 +19,7 @@ def get_type(expression: ast.expr) -> str:
 
 
 class Function:
-    def __init__(self, function: ast.FunctionDef) -> None:
+    def __init__(self, function: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function.name
 
         arguments = function.args
@@ -32,6 +32,8 @@ class Function:
         docstring: str = ast.get_docstring(function) or None
         self.docstring: str = docstring.strip() if docstring else None
         self.description: str = docstring.strip().splitlines()[0] if docstring else None
+
+        self.import_path: str = import_path
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
