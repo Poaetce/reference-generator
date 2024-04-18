@@ -15,16 +15,21 @@ def get_type(expression: ast.expr) -> str:
             return f'{value}[{slice}]'
         
 
-class TopLevelFunction:
-    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
-        self.identifier: str = function_definition.name
-
+class Function:
+    def __init__(self, function_definition: ast.FunctionDef) -> None:
         arguments: ast.arguments = function_definition.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
         self.parameter_types: list[str] = [get_type(argument.annotation) for argument in arguments.args]
         self.parameter_optional: list[bool] = [False] * (len(arguments.args) - len(arguments.defaults)) + [True] * len(arguments.defaults)
 
         self.return_type: str = get_type(function_definition.returns)
+
+
+class TopLevelFunction(Function):
+    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
+        self.identifier: str = function_definition.name
+
+        Function.__init__(self, function_definition)
 
         docstring: str = ast.get_docstring(function_definition) or None
         self.docstring: str = docstring.strip() if docstring else None
