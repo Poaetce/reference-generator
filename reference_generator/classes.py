@@ -38,10 +38,10 @@ class Function:
         if self.parameters:
             parameter_list: str = "=== parameters"
             for index in range(len(self.parameters)):
-                item: str = "\n* _{parameter_type}_ *{parameter}* {optional} - <PARAMETER DESCRIPTION>".format(
+                item: str = "\n* _{parameter_type}_ *{parameter}*{optional} - <PARAMETER DESCRIPTION>".format(
                     parameter_type = self.parameter_types[index],
                     parameter = self.parameters[index],
-                    optional = '(optional)' if self.parameter_optional[index] else '',
+                    optional = " (optional)" if self.parameter_optional[index] else '',
                 )
                 parameter_list += item
             
