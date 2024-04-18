@@ -39,7 +39,7 @@ class Function:
 
 
 class TopLevelFunction(Function):
-    def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
+    def __init__(self, function_definition: ast.FunctionDef, reference: str) -> None:
         self.identifier: str = function_definition.name
 
         Function.__init__(self, function_definition)
@@ -48,7 +48,7 @@ class TopLevelFunction(Function):
         self.docstring: str = docstring.strip() if docstring else None
         self.description: str = docstring.strip().splitlines()[0] if docstring else None
 
-        self.import_path: str = import_path
+        self.reference: str = reference
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
@@ -77,7 +77,7 @@ class TopLevelFunction(Function):
     def shape(self) -> str:
         parameters: str = '_' + '_, _'.join(self.parameters) + '_' if self.parameters else ''
 
-        return f"`{self.import_path}.*{self.identifier}*({parameters})`"
+        return f"`{self.reference}.*{self.identifier}*({parameters})`"
     
     def details(self) -> str:
         return f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
