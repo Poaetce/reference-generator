@@ -15,7 +15,7 @@ def get_type(expression: ast.expr) -> str:
             return f'{value}[{slice}]'
         
 
-class Function:
+class TopLevelFunction:
     def __init__(self, function_definition: ast.FunctionDef, import_path: str) -> None:
         self.identifier: str = function_definition.name
 
