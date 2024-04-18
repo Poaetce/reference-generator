@@ -86,3 +86,32 @@ class TopLevelFunction(_Function):
             main += '\n\n' + returns
 
         return main
+
+
+class Method(_Function):
+    def __init__(self, function_definition: ast.FunctionDef, class_reference: str) -> None:
+        _Function.__init__(self, function_definition, class_reference)
+
+    def docstring_template(self) -> str:
+        main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
+
+        if self.parameters:
+            parameter_list: str = "==== parameters"
+            for index in range(len(self.parameters)):
+                item: str = "\n* _{parameter_type}_ *{parameter}*{optional} - <PARAMETER DESCRIPTION>".format(
+                    parameter_type = self.parameter_types[index],
+                    parameter = self.parameters[index],
+                    optional = " (optional)" if self.parameter_optional[index] else '',
+                )
+                parameter_list += item
+            
+            main += '\n\n' + parameter_list
+        
+        if self.return_type:
+            returns: str = "==== returns\n_{return_type}_ - <RETURN DESCRIPTION>".format(
+                return_type = self.return_type,
+            )
+
+            main += '\n\n' + returns
+
+        return main
