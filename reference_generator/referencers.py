@@ -15,7 +15,7 @@ def get_type(expression: ast.expr) -> str:
             return f'{value}[{slice}]'
         
 
-class _Basic:
+class _BaseReferencer:
     def __init__(self, node: ast.stmt, reference: str) -> None:
         self.identifier: str = node.name
 
@@ -26,9 +26,9 @@ class _Basic:
         self.reference: str = reference
         
 
-class _Function(_Basic):
+class _BaseFunctionReferencer(_BaseReferencer):
     def __init__(self, function_node: ast.FunctionDef, reference: str) -> None:
-        _Basic.__init__(self, function_node, reference)
+        _BaseReferencer.__init__(self, function_node, reference)
 
         arguments: ast.arguments = function_node.args
         self.parameters: list[str] = [argument.arg for argument in arguments.args]
@@ -59,9 +59,9 @@ class _Function(_Basic):
         return f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
 
 
-class TopLevelFunction(_Function):
+class TopLevelFunctionReferencer(_BaseFunctionReferencer):
     def __init__(self, function_node: ast.FunctionDef, import_path: str) -> None:
-        _Function.__init__(self, function_node, import_path)
+        _BaseFunctionReferencer.__init__(self, function_node, import_path)
 
     def docstring_template(self) -> str:
         main: str = "<DESCRIPTION>\n\n<EXPLANATION>"
@@ -88,9 +88,9 @@ class TopLevelFunction(_Function):
         return main
 
 
-class Method(_Function):
+class MethodReferencer(_BaseFunctionReferencer):
     def __init__(self, function_node: ast.FunctionDef, class_reference: str) -> None:
-        _Function.__init__(self, function_node, class_reference)
+        _BaseFunctionReferencer.__init__(self, function_node, class_reference)
         
         self.parameters.pop(0)
         self.parameter_types.pop(0)
@@ -122,14 +122,14 @@ class Method(_Function):
         return main
     
 
-class Class(_Basic):
-    def __init__(self, class_node: ast.ClassDef, import_path: str) -> None:
-        _Basic.__init__(self, class_node, import_path)
+class ClassReferencer(_BaseReferencer):
+    def __init__(self, class_node: ast.ClassReferencerDef, import_path: str) -> None:
+        _BaseReferencer.__init__(self, class_node, import_path)
         
-        self.methods: list[Method] = []
+        self.methods: list[MethodReferencer] = []
         for node in ast.iter_child_nodes(class_node):
             if type(node) == ast.FunctionDef:
-                self.methods.append(Method(node, self.identifier))
+                self.methods.append(MethodReferencer(node, self.identifier))
 
     def docstring_template(self) -> str:
         return "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== attributes\n* _<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>"
