@@ -1,5 +1,8 @@
 import ast
 
+CONNECTOR: str = "\n\n'''\n\n"
+
+
 def get_type(expression: ast.expr) -> str:
     match type(expression):
         case ast.Name:
@@ -92,9 +95,17 @@ class MethodReferencer(_BaseFunctionReferencer):
     def __init__(self, function_node: ast.FunctionDef, class_reference: str) -> None:
         _BaseFunctionReferencer.__init__(self, function_node, class_reference)
         
-        self.parameters.pop(0)
-        self.parameter_types.pop(0)
-        self.parameter_optional.pop(0)
+        self.static: bool = True if 'cls' in self.parameters else False
+
+        for parameter in self.parameters:
+            if parameter in [
+                'self',
+                'cls',
+            ]:
+                index: int = self.parameters.index(parameter)
+                self.parameters.pop(index)
+                self.parameter_types.pop(index)
+                self.parameter_optional.pop(index)
 
 
     def docstring_template(self) -> str:
@@ -122,27 +133,56 @@ class MethodReferencer(_BaseFunctionReferencer):
         return main
     
 
+class ConstructorReferencer(MethodReferencer):
+    def __init__(self, function_node: ast.FunctionDef, import_path: str, identifier: str) -> None:
+        MethodReferencer.__init__(self, function_node, import_path)
+
+        self.identifier = identifier
+
+    def docstring_template(self) -> str:
+        main: str = ''
+
+        if self.parameters:
+            parameter_list: str = "==== parameters"
+            for index in range(len(self.parameters)):
+                item: str = "\n* _{parameter_type}_ *{parameter}*{optional} - <PARAMETER DESCRIPTION>".format(
+                    parameter_type = self.parameter_types[index],
+                    parameter = self.parameters[index],
+                    optional = " (optional)" if self.parameter_optional[index] else '',
+                )
+                parameter_list += item
+            
+            main = parameter_list
+
+        return main
+
+
 class ClassReferencer(_BaseReferencer):
     def __init__(self, class_node: ast.ClassDef, import_path: str) -> None:
         _BaseReferencer.__init__(self, class_node, import_path)
         
+        self.constructor: ConstructorReferencer
+
         self.methods: list[MethodReferencer] = []
         for node in ast.iter_child_nodes(class_node):
             if type(node) == ast.FunctionDef:
-                self.methods.append(MethodReferencer(node, self.identifier))
+                if node.name == '__init__':
+                    self.constructor = ConstructorReferencer(node, import_path, self.identifier)
+                else:
+                    self.methods.append(MethodReferencer(node, self.identifier))
 
     def docstring_template(self) -> str:
         return "<DESCRIPTION>\n\n<EXPLANATION>\n\n=== attributes\n* _<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>"
 
     def shape(self) -> str:
-        return f"`{self.reference}.*{self.identifier}*"
+        return f"`{self.reference}.*{self.identifier}*`"
     
-    def details(self) -> str:
-        main: str = f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}"
+    def method_tables(self) -> str:
+        main: str = '=== methods\n\n'
 
         if self.methods:
-            non_typed_table: str = ""
-            typed_table: str = ""
+            non_typed_table: str = ''
+            typed_table: str = ''
 
             for method in self.methods:
                 if method.return_type:
@@ -150,10 +190,20 @@ class ClassReferencer(_BaseReferencer):
                 else:
                     non_typed_table += method.table_item() + '\n\n'
 
-            main += ("[cols='1,5']\n\n" + non_typed_table) if non_typed_table else ""
-            main += ("[cols='1,5']\n\n" + typed_table) if typed_table else ""
+            non_typed_table = (f"[cols='1,5']\n|===\n\n{non_typed_table}|===") if non_typed_table else ''
+            typed_table = (f"[cols='1,1,5']\n|===\n\n{typed_table}|===") if typed_table else ''
 
-            main += '\n\n'.join(method.details() for method in self.methods)
+            main += '\n\n'.join([non_typed_table, typed_table])
+
+        return main
+
+    def details(self) -> str:
+        main: str = f"== `{self.identifier}`\n\n{self.shape()}\n\n{self.docstring}{CONNECTOR}{self.method_tables()}{CONNECTOR}"
+
+        main += (self.constructor.details() if self.constructor else '') + CONNECTOR
+
+        if self.methods:
+            main += CONNECTOR.join(method.details() for method in self.methods)
         
         return main
 

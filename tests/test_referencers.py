@@ -1,6 +1,6 @@
 import unittest
 import ast
-from reference_generator.referencers import TopLevelFunctionReferencer
+from reference_generator.referencers import TopLevelFunctionReferencer, ClassReferencer
 
 
 def open_read_parse(file: str, depth: int) -> ast.FunctionDef:
@@ -128,6 +128,65 @@ class TestTopLevelFunctionReferencer(unittest.TestCase):
         full_function: TopLevelFunctionReferencer = TopLevelFunctionReferencer(open_read_parse('tests/test_files/functions/full_function.py', 1), 'functions')
         expected_full_function_details: str = f"== `hello`\n\n{full_function.shape()}\n\n{full_function.docstring}"
         self.assertEqual(full_function.details(), expected_full_function_details)
+
+
+class TestClassReferencer(unittest.TestCase):
+
+    def test_attributes(self):
+        base_class: ClassReferencer = ClassReferencer(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
+        self.assertEqual(base_class.identifier, 'Cat')
+        self.assertEqual(base_class.description, "cat class")
+        self.assertEqual(base_class.reference, 'classes')
+    
+    def test_docstring_template(self):
+        base_class: ClassReferencer = ClassReferencer(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
+        expected_base_class_docstring: str = '\n'.join([
+            "<DESCRIPTION>",
+            '',
+            "<EXPLANATION>",
+            '',
+            "=== attributes",
+            "* _<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>",
+        ])
+        self.assertEqual(base_class.docstring_template(), expected_base_class_docstring)
+
+    def test_method_tables(self):
+        base_class: ClassReferencer = ClassReferencer(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
+        expected_base_class_tables: str = '\n'.join([
+            "=== methods",
+            '',
+            "[cols='1,5']",
+            "|===",
+            '',
+            "|`*rename*`",
+            "|renames the cat",
+            '',
+            "|`*introduce*`",
+            "|introduces the cat",
+            '',
+            "|`*call*`",
+            "|meows",
+            '',
+            "|===",
+            '',
+            "[cols='1,1,5']",
+            "|===",
+            '',
+            "|`_int_`",
+            "|`*age_human_years*`",
+            "|age of cat in human years",
+            '',
+            "|===",
+        ])
+        self.assertEqual(base_class.method_tables(), expected_base_class_tables)
+
+    def test_shape(self):
+        base_class: ClassReferencer = ClassReferencer(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
+        expected_base_class_shape: str = "`classes.*Cat*`"
+        self.assertEqual(base_class.shape(), expected_base_class_shape)
+
+    def test_details(self):
+        pass
 
 
 if __name__ == '__main__':
