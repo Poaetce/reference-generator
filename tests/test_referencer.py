@@ -14,7 +14,7 @@ def open_read_parse(file_path: str, depth: int) -> ast.stmt:
 
 class TestFunctionRef(unittest.TestCase):
 
-    def test_attributes(self):
+    def test_attributes(self) -> None:
         full_function: FunctionRef = FunctionRef(open_read_parse('tests/test_files/functions/full_function.py', 1), 'functions')
         self.assertEqual(full_function.identifier, 'hello')
         self.assertEqual(full_function.parameters, ['name'])
@@ -23,7 +23,7 @@ class TestFunctionRef(unittest.TestCase):
         self.assertEqual(full_function.reference, 'functions')
 
 
-    def test_docstring_template(self):
+    def test_docstring_template(self) -> None:
         base_function: FunctionRef = FunctionRef(open_read_parse('tests/test_files/functions/base_function.py', 1), 'functions')
         expected_base_function_docstring: str = '\n'.join([
             "<DESCRIPTION>",
@@ -85,7 +85,7 @@ class TestFunctionRef(unittest.TestCase):
         ])
         self.assertEqual(full_function.docstring_template(), expected_full_function_docstring)
 
-    def test_table_item(self):
+    def test_table_item(self) -> None:
         base_function: FunctionRef = FunctionRef(open_read_parse('tests/test_files/functions/base_function.py', 1), 'functions')
         expected_base_function_item: list[str] = [
             "`*hello*`",
@@ -101,7 +101,7 @@ class TestFunctionRef(unittest.TestCase):
         ]
         self.assertEqual(return_function.table_item(), expected_return_function_item)
 
-    def test_shape(self):
+    def test_shape(self) -> None:
         base_function: FunctionRef = FunctionRef(open_read_parse('tests/test_files/functions/base_function.py', 1), 'functions')
         expected_base_function_shape: str = "`functions.*hello*()`"
         self.assertEqual(base_function.shape().generate()[0], expected_base_function_shape)
@@ -114,7 +114,7 @@ class TestFunctionRef(unittest.TestCase):
         expected_multiple_parameter_function_shape: str = "`functions.*hello*(_name_, _shout_)`"
         self.assertEqual(multiple_parameter_function.shape().generate()[0], expected_multiple_parameter_function_shape)
 
-    def test_details(self):
+    def test_details(self) -> None:
         base_function: FunctionRef = FunctionRef(open_read_parse('tests/test_files/functions/base_function.py', 1), 'functions')
         expected_base_function_details: str = f"== `hello`\n\n{base_function.shape().generate()[0]}\n\n{base_function.docstring}"
         self.assertEqual(flatten(base_function.details()), expected_base_function_details)
@@ -138,13 +138,13 @@ class TestFunctionRef(unittest.TestCase):
 
 class TestClassRef(unittest.TestCase):
 
-    def test_attributes(self):
+    def test_attributes(self) -> None:
         base_class: ClassRef = ClassRef(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
         self.assertEqual(base_class.identifier, 'Cat')
         self.assertEqual(base_class.description, "cat class")
         self.assertEqual(base_class.reference, 'classes')
     
-    def test_docstring_template(self):
+    def test_docstring_template(self) -> None:
         base_class: ClassRef = ClassRef(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
         expected_base_class_docstring: str = '\n'.join([
             "<DESCRIPTION>",
@@ -158,7 +158,7 @@ class TestClassRef(unittest.TestCase):
         ])
         self.assertEqual(base_class.docstring_template(), expected_base_class_docstring)
 
-    def test_method_tables(self):
+    def test_method_tables(self) -> None:
         base_class: ClassRef = ClassRef(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
         expected_base_class_tables: str = '\n'.join([
             "=== methods",
@@ -188,12 +188,12 @@ class TestClassRef(unittest.TestCase):
         ])
         self.assertEqual(flatten(base_class.method_tables()), expected_base_class_tables)
 
-    def test_shape(self):
+    def test_shape(self) -> None:
         base_class: ClassRef = ClassRef(open_read_parse('tests/test_files/classes/base_class.py', 1), 'classes')
         expected_base_class_shape: str = "`classes.*Cat*`"
         self.assertEqual(base_class.shape().generate()[0], expected_base_class_shape)
 
-    def test_details(self):
+    def test_details(self) -> None:
         pass
 
 
