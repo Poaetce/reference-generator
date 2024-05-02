@@ -1,4 +1,9 @@
 class LineDoc:
+    def generate(self) -> list[str]:
+        return ["'''"]
+
+
+class TextDoc:
     def __init__(self, content: str) -> None:
         self.content: str = content
 
@@ -53,9 +58,12 @@ class TableDoc:
         return table
 
 
-def flatten(elements: list[LineDoc | HeadingDoc | ListDoc | TableDoc]) -> str:
-    lines: list[str] = []
-    for element in elements:
-        lines += element.generate()
-        lines.append('')
-    return '\n'.join(lines)
+document_list = list[LineDoc | TextDoc | HeadingDoc | ListDoc | TableDoc]
+
+
+def flatten(document: document_list) -> str:
+    elements: list[str] = []
+    for element in document:
+        elements += element.generate()
+        elements.append('')
+    return '\n'.join(elements).strip()

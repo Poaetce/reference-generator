@@ -10,7 +10,7 @@ class Cat:
     * _str_ *breed* - breed of the cat
     '''
 
-    def __init__(self, name: str, age: int, breed: str = None) -> None:
+    def __init__(self, name: str, age: int, breed: str | None = None) -> None:
         '''
         ==== parameters
         * _str_ *name* - name of the cat
@@ -30,7 +30,7 @@ class Cat:
         * _str_ *name*  - new name of the cat
         '''
 
-        self.name: str = name
+        self.name = name
 
     def age_human_years(self) -> int:
         '''
