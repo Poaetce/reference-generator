@@ -162,6 +162,8 @@ class ClassRef(_BaseRef):
         content.append(documenter.HeadingDoc("attributes", 3))
         attribute_list: documenter.ListDoc = documenter.ListDoc()
         attribute_list.add_item("_<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>")
+        attribute_list.add_item("_<ATTRIBUTE TYPE>_ *<ATTRIBUTE>* - <ATTRIBUTE_DESCRIPTION>")
+        content.append(attribute_list)
 
         return documenter.flatten(content)
 
