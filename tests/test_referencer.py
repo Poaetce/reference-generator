@@ -4,11 +4,11 @@ from reference_generator.referencer import FunctionRef, ClassRef
 from reference_generator.documenter import flatten
 
 
-def open_read_parse(file: str, depth: int) -> ast.FunctionDef:
-    with open(file, 'r') as opened:
-        node: ast.stmt = ast.parse(opened.read())
+def open_read_parse(file_path: str, depth: int) -> ast.stmt:
+    with open(file_path, 'r') as file:
+        module: ast.Module = ast.parse(file.read())
         for level in range(depth):
-            node = node.body[0]
+            node: ast.stmt = module.body[0]
         return node
 
 
