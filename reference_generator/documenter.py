@@ -6,11 +6,11 @@ class LineDoc:
 
 class TextDoc:
     def __init__(self, content: str) -> None:
-        self.content: str = content # content of the text
+        self.contents: list[str] = content.split('\n') # list of lines of the text
 
     def generate(self) -> list[str]:
-        # returns content as a list
-        return [self.content]
+        # returns contents
+        return self.contents
 
 
 class HeadingDoc:
