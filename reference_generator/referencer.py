@@ -201,6 +201,9 @@ class ClassRef(_BaseRef):
         content += self.method_tables()
         content.append(documenter.LineDoc())
 
+        if self.constructor: content += self.constructor.details()
+        for method in self.methods: content += method.details()
+
         return content
 
     
